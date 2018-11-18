@@ -11,10 +11,14 @@ PIXY_RCS_CENTER_POS = ((PIXY_RCS_MAX_POS - PIXY_RCS_MIN_POS) / 2)
 
 panLoop = PIDLoop(400, 0, 400, True)
 tiltLoop = PIDLoop(500, 0, 500, True)
-rotateLoop = PIDLoop(5.25, 10.5, 5.25, False) #0.8m/s max, 7 rad/s max
-translateLoop = PIDLoop(0.8, 1.6, 0.6, False)
+rotateLoop = PIDLoop(300, 600, 300, False)
+translateLoop = PIDLoop(400, 800, 300, False)
 
-MAX_TRANSLATE_VELOCITY = 0.8
+#rotateLoop = PIDLoop(5.25, 10.5, 5.25, False) #0.8m/s max, 7 rad/s max
+#translateLoop = PIDLoop(0.8, 1.6, 0.6, False)
+
+MAX_TRANSLATE_VELOCITY = 250 # we convert this to 0.8 later
+#MAX_TRANSLATE_VELOCITY = 0.8
 
 
 trackedIndex = -1
@@ -77,6 +81,7 @@ def chase():
             rotateLoop.update(panOffset)
             translateLoop.update(-tiltOffset)
 
+            print("rotate: %d, translate: %d" % (rotateLoop.command, translateLoop.command))
             # keep translation velocity below maximum
             if translateLoop.command > MAX_TRANSLATE_VELOCITY:
                 translateLoop.command = MAX_TRANSLATE_VELOCITY
