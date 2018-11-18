@@ -16,14 +16,15 @@ translateLoop = PIDLoop(0.8, 1.6, 0.6, False)
 
 MAX_TRANSLATE_VELOCITY = 0.8
 
+
+trackedIndex = -1
+trackedBlock = None
+frameWidth = -1
+frameHeight = -1
+
 def chase():
     servoPub = rospy.Publisher("servo_cmd", Servo, queue_size=10)
     cmdvelPub = rospy.Publisher("/move_base/cmd_vel", Twist, queue_size=10)
-
-    frameWidth = -1
-    frameHeight = -1
-    trackedIndex = -1
-    trackedBlock = None
 
     def acquireBlock(blocks):
         if len(blocks) > 0 and blocks[0].age > 30:
@@ -50,12 +51,12 @@ def chase():
             return
 
         if trackedIndex == -1: #search
-            trackedIndex = acquireBlock()
+            trackedIndex = acquireBlock(data.blocks)
             if trackedIndex >= 0:
                 print("Found block!")
 
         if trackedIndex >= 0: # Found a block, now track it
-            trackedBlock = trackBlock(trackedIndex)
+            trackedBlock = trackBlock(data.blocks, trackedIndex)
 
         if trackedBlock != None:
             # we have a block!
@@ -66,8 +67,8 @@ def chase():
             tiltLoop.update(tiltOffset)
 
             # move the servos
-            pub.publish(Servo(0, panLoop.command))
-            pub.publish(Servo(1, tiltLoop.command))
+            servoPub.publish(Servo(0, panLoop.command))
+            servoPub.publish(Servo(1, tiltLoop.command))
 
             # calculate translate and rotate errors
             panOffset = panOffset + panLoop.command - PIXY_RCS_CENTER_POS
@@ -94,6 +95,7 @@ def chase():
             trackedBlock = None
 
     rospy.init_node("pixy2_chase_demo")
+
     rospy.Subscriber("block_data", PixyData, block_data_callback)
     rospy.Subscriber("pixy2_resolution", PixyResolution, resolution_callback)
 
