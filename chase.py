@@ -86,6 +86,9 @@ def chase():
             if translateLoop.command > MAX_TRANSLATE_VELOCITY:
                 translateLoop.command = MAX_TRANSLATE_VELOCITY
 
+            linearV = (translateLoop.command / 1000) * 0.8
+            angularV = (rotateLoop.command / 1000) * 7
+
             twistMsg = Twist()
             twistMsg.linear.z = translateLoop.command
             twistMsg.angular.z = rotateLoop.command
