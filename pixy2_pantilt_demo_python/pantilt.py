@@ -3,8 +3,8 @@
 import rospy
 from pixy2_msgs.msg import PixyData, Servo, PixyResolution
 
-PIXY_RCS_MIN_POS = 0
-PIXY_RCS_MAX_POS = 1000
+PIXY_RCS_MIN_POS = 20 # was 0
+PIXY_RCS_MAX_POS = 980 # was 1000
 PIXY_RCS_CENTER_POS = ((PIXY_RCS_MAX_POS - PIXY_RCS_MIN_POS) / 2)
 
 PID_MAX_INTEGRAL = 2000
@@ -75,21 +75,15 @@ def pan_tilt():
 
     def block_data_callback(data):
         global frameHeight
+        global frameWidth
         if (frameHeight == -1):
             return
 
         if (len(data.blocks) > 0):
             block = data.blocks[0]
 
-            centroidX = block.roi.x_offset + block.roi.width
-            centroidY = block.roi.y_offset + block.roi.height
-
-            # Use centroid
-            panOffset = (frameWidth // 2) - int(centroidX)
-            tiltOffset = int(centroidY) - (frameHeight // 2)
-
-            #panOffset = (frameWidth // 2) - int(data.blocks[0].roi.x_offset)
-            #tiltOffset = int(data.blocks[0].roi.y_offset) - (frameHeight // 2)
+            panOffset = (frameWidth // 2) - int(data.blocks[0].roi.x_offset)
+            tiltOffset = int(data.blocks[0].roi.y_offset) - (frameHeight // 2)
 
             panLoop.update(panOffset)
             tiltLoop.update(tiltOffset)
