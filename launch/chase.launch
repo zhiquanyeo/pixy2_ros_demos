@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="pixy2_demos" type="chase.py" name="pixy2_chase_node" output="screen">
+        <remap from="cmd_vel" to="move_base/cmd_vel"/>
+    </node>
+</launch>

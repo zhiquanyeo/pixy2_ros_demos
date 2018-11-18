@@ -28,7 +28,7 @@ frameHeight = -1
 
 def chase():
     servoPub = rospy.Publisher("servo_cmd", Servo, queue_size=10)
-    cmdvelPub = rospy.Publisher("/move_base/cmd_vel", Twist, queue_size=10)
+    cmdvelPub = rospy.Publisher("cmd_vel", Twist, queue_size=10)
 
     def acquireBlock(blocks):
         if len(blocks) > 0 and blocks[0].age > 30:
