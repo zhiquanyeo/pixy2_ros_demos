@@ -79,8 +79,17 @@ def pan_tilt():
             return
 
         if (len(data.blocks) > 0):
-            panOffset = (frameWidth // 2) - int(data.blocks[0].roi.x_offset)
-            tiltOffset = int(data.blocks[0].roi.y_offset) - (frameHeight // 2)
+            block = data.blocks[0]
+
+            centroidX = block.roi.x_offset + block.roi.width
+            centroidY = block.roi.y_offset + block.roi.height
+
+            # Use centroid
+            panOffset = (frameWidth // 2) - int(centroidX)
+            tiltOffset = int(centroidY) - (frameHeight // 2)
+
+            #panOffset = (frameWidth // 2) - int(data.blocks[0].roi.x_offset)
+            #tiltOffset = int(data.blocks[0].roi.y_offset) - (frameHeight // 2)
 
             panLoop.update(panOffset)
             tiltLoop.update(tiltOffset)
