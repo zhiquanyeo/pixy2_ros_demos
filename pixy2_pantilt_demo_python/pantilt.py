@@ -58,8 +58,8 @@ class PIDLoop:
 
         self.prevError = error
 
-panLoop = PIDLoop(400, 0, 400, true)
-tiltLoop = PIDLoop(500, 0, 500, true)
+panLoop = PIDLoop(400, 0, 400, True)
+tiltLoop = PIDLoop(500, 0, 500, True)
 
 def pan_tilt():
     pub = rospy.Publisher("servo_cmd", Servo, queue_size=10)
@@ -68,10 +68,13 @@ def pan_tilt():
     frameHeight = -1
 
     def resolution_callback(data):
+        global frameWidth
+        global frameHeight
         frameWidth = data.width
         frameHeight = data.height
 
     def block_data_callback(data):
+        global frameHeight
         if (frameHeight == -1):
             return
 
