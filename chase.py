@@ -18,7 +18,7 @@ MAX_TRANSLATE_VELOCITY = 0.8
 
 def chase():
     servoPub = rospy.Publisher("servo_cmd", Servo, queue_size=10)
-    cmdvelPub = rospy.Publisher("/move_base/cmd_vel", Twise, queue_size=10)
+    cmdvelPub = rospy.Publisher("/move_base/cmd_vel", Twist, queue_size=10)
 
     frameWidth = -1
     frameHeight = -1
