@@ -90,8 +90,13 @@ def chase():
             angularV = (rotateLoop.command / 1000) * 7
 
             twistMsg = Twist()
-            twistMsg.linear.z = translateLoop.command
-            twistMsg.angular.z = rotateLoop.command
+            twistMsg.linear.x = linearV
+            twistMsg.angular.z = angularV
+
+            twistMsg.linear.y = 0
+            twistMsg.linear.z = 0
+            twistMsg.angular.x = 0
+            twistMsg.angular.y = 0
 
             cmdvelPub.publish(twistMsg)
         else:
